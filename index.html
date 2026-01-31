@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Mis Finanzas</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+<header>💰 Mis Finanzas</header>
+
+<section class="resumen">
+<div id="balance"></div>
+<div>
+<span id="ingresos"></span>
+<span id="gastos"></span>
+</div>
+</section>
+
+<section class="form">
+
+<input id="desc" placeholder="Descripción">
+
+<input id="monto" type="number" placeholder="Monto">
+
+<select id="categoria">
+<option>Comida</option>
+<option>Servicios</option>
+<option>Transporte</option>
+<option>Otros</option>
+</select>
+
+<select id="tipo">
+<option value="ingreso">Ingreso</option>
+<option value="gasto">Gasto</option>
+</select>
+
+<button onclick="agregar()">➕ Guardar</button>
+
+</section>
+
+<select id="mesFiltro" onchange="render()" class="mes"></select>
+
+<canvas id="grafico"></canvas>
+
+<section id="lista" class="lista"></section>
+
+<footer>
+<button onclick="exportar()">Excel</button>
+<button onclick="cerrarMes()">Cerrar mes</button>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
