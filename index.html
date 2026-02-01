@@ -2,60 +2,43 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Mis Finanzas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Financiero</title>
 
 <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
 
-<header>💰 Mis Finanzas</header>
-
-<section class="resumen">
-<div id="balance"></div>
-<div>
-<span id="ingresos"></span>
-<span id="gastos"></span>
-</div>
-</section>
+<header>
+<h2>💰 Mis Finanzas</h2>
+<button id="modo">🌙</button>
+</header>
 
 <section class="form">
+
+<select id="tipo">
+<option value="gasto">Gasto</option>
+<option value="ingreso">Ingreso</option>
+</select>
+
+<select id="categoria"></select>
 
 <input id="desc" placeholder="Descripción">
 
 <input id="monto" type="number" placeholder="Monto">
 
-<select id="categoria">
-<option>Comida</option>
-<option>Servicios</option>
-<option>Transporte</option>
-<option>Otros</option>
-</select>
-
-<select id="tipo">
-<option value="ingreso">Ingreso</option>
-<option value="gasto">Gasto</option>
-</select>
-
-<button onclick="agregar()">➕ Guardar</button>
+<button onclick="agregar()">Agregar</button>
 
 </section>
 
-<select id="mesFiltro" onchange="render()" class="mes"></select>
+<section id="lista"></section>
 
 <canvas id="grafico"></canvas>
 
-<section id="lista" class="lista"></section>
-
 <footer>
-<button onclick="exportar()">Excel</button>
-<button onclick="cerrarMes()">Cerrar mes</button>
+<button onclick="pagoAutomatico()">AutoPago</button>
 </footer>
 
 <script src="app.js"></script>

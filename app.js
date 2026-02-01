@@ -1,200 +1,163 @@
-// ================================
-// Estado principal
-// ================================
+const tipo=document.getElementById("tipo");
+const categoria=document.getElementById("categoria");
+const desc=document.getElementById("desc");
+const monto=document.getElementById("monto");
+const lista=document.getElementById("lista");
+const canvasGrafico=document.getElementById("grafico");
+const modo=document.getElementById("modo");
 
-let data = JSON.parse(localStorage.getItem("finanzas")) || {};
-let mesActual = new Date().toISOString().slice(0, 7);
+let chart=null;
 
-// ================================
-// Referencias DOM
-// ================================
+const categorias={
+gasto:["Transporte","Luz","Arriendo","Agua","Internet","Comida","Salud","Educación","Otros"],
+ingreso:["Sueldo","Extras","Ventas","Otros"]
+};
 
-const lista = document.getElementById("lista");
-const mesFiltro = document.getElementById("mesFiltro");
-const canvasGrafico = document.getElementById("grafico");
+const IA={
+luz:"Luz",agua:"Agua",internet:"Internet",
+arriendo:"Arriendo",uber:"Transporte",
+comida:"Comida",farmacia:"Salud"
+};
 
-// Inputs
-const desc = document.getElementById("desc");
-const monto = document.getElementById("monto");
-const categoria = document.getElementById("categoria");
-const tipo = document.getElementById("tipo");
+let state=JSON.parse(localStorage.getItem("finanzas"))||{
+meses:{},
+reglas:{},
+recurrentes:[]
+};
 
-// Totales
-const ingresosTxt = document.getElementById("ingresos");
-const gastosTxt = document.getElementById("gastos");
-const balanceTxt = document.getElementById("balance");
+const mesActual=new Date().toISOString().slice(0,7);
 
-if (!data[mesActual]) data[mesActual] = { mov: [], saldo: 0 };
-
-// ================================
-// Persistencia
-// ================================
-
-function guardar() {
-  localStorage.setItem("finanzas", JSON.stringify(data));
+if(!state.meses[mesActual]){
+state.meses[mesActual]={mov:[]};
 }
 
-// ================================
-// Agregar movimiento
-// ================================
-
-function agregar() {
-  
-  const d = desc.value.trim();
-  const m = Number(monto.value);
-  const c = categoria.value;
-  const t = tipo.value;
-  
-  if (!d || !m) return alert("Completa los campos");
-  
-  data[mesActual].mov.push({
-    id: Date.now(),
-    d,
-    m,
-    c,
-    t
-  });
-  
-  desc.value = "";
-  monto.value = "";
-  
-  guardar();
-  render();
+function save(){
+localStorage.setItem("finanzas",JSON.stringify(state));
 }
 
-// ================================
-// Eliminar
-// ================================
-
-function del(id) {
-  data[mesActual].mov = data[mesActual].mov.filter(x => x.id !== id);
-  guardar();
-  render();
+function cargarCategorias(){
+categoria.innerHTML="";
+categorias[tipo.value].forEach(c=>{
+categoria.innerHTML+=`<option>${c}</option>`;
+});
 }
 
-// ================================
-// Render UI
-// ================================
+tipo.addEventListener("change",cargarCategorias);
+cargarCategorias();
 
-let chart;
+if("Notification"in window)Notification.requestPermission();
 
-function render() {
-  
-  mesActual = mesFiltro.value || mesActual;
-  
-  lista.innerHTML = "";
-  
-  let ingresos = 0;
-  let gastos = 0;
-  
-  data[mesActual].mov.forEach(x => {
-    
-    if (x.t === "ingreso") ingresos += x.m;
-    else gastos += x.m;
-    
-    lista.innerHTML += `
-      <div class="item">
-        <b>${x.d}</b><br>
-        $${x.m} · ${x.c}<br>
-        ${x.t}
-        <div style="float:right" onclick="del(${x.id})">❌</div>
-      </div>
-    `;
-  });
-  
-  const balance = ingresos - gastos + data[mesActual].saldo;
-  
-  ingresosTxt.innerText = `Ingresos $${ingresos}`;
-  gastosTxt.innerText = `Gastos $${gastos}`;
-  balanceTxt.innerText = `$${balance}`;
-  
-  cargarMeses();
-  pintarGrafico(ingresos, gastos);
+function notificar(t,b){
+if(Notification.permission==="granted"){
+new Notification(t,{body:b});
+}
 }
 
-// ================================
-// Gráfico
-// ================================
+function aplicarReglas(t){
+t=t.toLowerCase();
 
-function pintarGrafico(i, g) {
-  
-  if (chart) chart.destroy();
-  
-  chart = new Chart(canvasGrafico, {
-    type: "doughnut",
-    data: {
-      labels: ["Ingresos", "Gastos"],
-      datasets: [{
-        data: [i, g]
-      }]
-    }
-  });
+for(let k in state.reglas){
+if(t.includes(k)) return state.reglas[k];
 }
 
-// ================================
-// Meses
-// ================================
-
-function cargarMeses() {
-  
-  mesFiltro.innerHTML = "";
-  
-  Object.keys(data).sort().reverse().forEach(m => {
-    mesFiltro.innerHTML += `<option value="${m}">${m}</option>`;
-  });
-  
-  mesFiltro.value = mesActual;
+for(let k in IA){
+if(t.includes(k)) return IA[k];
 }
 
-// ================================
-// Cierre mensual
-// ================================
-
-function cerrarMes() {
-  
-  let ingresos = 0;
-  let gastos = 0;
-  
-  data[mesActual].mov.forEach(x => {
-    if (x.t === "ingreso") ingresos += x.m;
-    else gastos += x.m;
-  });
-  
-  const saldoFinal = ingresos - gastos + data[mesActual].saldo;
-  
-  const fecha = new Date(mesActual + "-01");
-  fecha.setMonth(fecha.getMonth() + 1);
-  const nuevoMes = fecha.toISOString().slice(0, 7);
-  
-  data[nuevoMes] = {
-    mov: [],
-    saldo: saldoFinal
-  };
-  
-  guardar();
-  
-  alert(`Mes cerrado. Nuevo mes iniciado con saldo $${saldoFinal}`);
-  location.reload();
+return null;
 }
 
-// ================================
-// Exportar Excel
-// ================================
+function agregar(){
 
-function exportar() {
-  const ws = XLSX.utils.json_to_sheet(data[mesActual].mov);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, mesActual);
-  XLSX.writeFile(wb, `finanzas-${mesActual}.xlsx`);
-}
+const t=tipo.value;
+const d=desc.value;
+const m=Number(monto.value);
+let c=categoria.value;
 
-// ================================
-// Init
-// ================================
+const ai=aplicarReglas(d);
+if(ai) c=ai;
+else state.reglas[d.toLowerCase()]=c;
 
-cargarMeses();
+state.meses[mesActual].mov.push({
+id:Date.now(),
+t,c,d,m
+});
+
+if(t==="gasto") notificar("Nuevo gasto",`${c} $${m}`);
+
+desc.value="";
+monto.value="";
+
+save();
 render();
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
 }
+
+function render(){
+
+lista.innerHTML="";
+
+state.meses[mesActual].mov.forEach(x=>{
+lista.innerHTML+=`
+<div class="item">
+<span>${x.d} (${x.c})</span>
+<strong>${x.t==="gasto"?"-":"+"}$${x.m}</strong>
+</div>`;
+});
+
+graf();
+}
+
+function graf(){
+
+if(chart) chart.destroy();
+
+const meses=Object.keys(state.meses).slice(-3);
+
+let ingresos=[];
+let gastos=[];
+
+meses.forEach(m=>{
+let i=0,g=0;
+state.meses[m].mov.forEach(x=>{
+x.t==="ingreso"?i+=x.m:g+=x.m;
+});
+ingresos.push(i);
+gastos.push(g);
+});
+
+chart=new Chart(canvasGrafico,{
+type:"bar",
+data:{
+labels:meses,
+datasets:[
+{label:"Ingresos",data:ingresos},
+{label:"Gastos",data:gastos}
+]
+}
+});
+}
+
+function pagoAutomatico(){
+const d=prompt("Descripción");
+const m=Number(prompt("Monto"));
+const c=prompt("Categoría");
+state.recurrentes.push({d,m,c});
+save();
+alert("Autopago creado");
+}
+
+state.recurrentes.forEach(p=>{
+state.meses[mesActual].mov.push({
+id:Date.now()+Math.random(),
+t:"gasto",
+d:p.d,
+m:p.m,
+c:p.c
+});
+});
+
+modo.onclick=()=>{
+document.body.classList.toggle("dark");
+};
+
+render();
