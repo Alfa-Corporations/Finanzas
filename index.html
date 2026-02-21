@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Control Financiero</title>
 
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Mis Finanzas</title>
+  
+  <link rel="stylesheet" href="styles.css">
+  
 </head>
 
 <body>
-
-<header>
-<h2>💰 Mis Finanzas</h2>
-<button id="modo">🌙</button>
-</header>
-
-<section class="form">
-
-<select id="tipo">
-<option value="gasto">Gasto</option>
-<option value="ingreso">Ingreso</option>
-</select>
-
-<select id="categoria"></select>
-
-<input id="desc" placeholder="Descripción">
-
-<input id="monto" type="number" placeholder="Monto">
-
-<button onclick="agregar()">Agregar</button>
-
-</section>
-
-<section id="lista"></section>
-
-<canvas id="grafico"></canvas>
-
-<footer>
-<button onclick="pagoAutomatico()">AutoPago</button>
-</footer>
-
-<script src="app.js"></script>
-
+  <header>
+    <h3>💰 Finanzas</h3>
+    <div>
+      <button onclick="location.href='cierres.html'">📅</button>
+      <button onclick="location.href='cuentas.html'">💸</button>
+    </div>
+    
+  </header>
+  <div id="app" class="app">
+    <section class="balance">
+      <div>
+        <h1 id="saldo">$0</h1>
+        <div class="montos">
+          <span id="ingresos">$0</span>
+          <span id="gastos">$0</span>
+        </div>
+        
+      </div>
+    </section>
+    <section class="form">
+      <select id="tipo">
+        <
+        <option value="ingreso">Ingreso</option>
+      <option value="gasto">Gasto</option>
+      </select>
+      
+      <select id="categoria"></select>
+      
+      <input id="monto" type="number" placeholder="Monto">
+      <input id="descripcion" placeholder="Descripción">
+      
+      <button onclick="agregarMovimiento()">Agregar</button>
+    </section>
+    
+    <ul id="lista"></ul>
+    
+    <footer>
+      <button onclick="cerrarMes()">Cerrar mes</button>
+    </footer>
+    
+  </div>
+  
+  <script src="app.js"></script>
+  
 </body>
+
 </html>

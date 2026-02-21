@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cierres</title>
+
+<style>
+
+body{
+margin:0;
+font-family:system-ui;
+background:#f4f4f4;
+padding:10px;
+}
+
+select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-bottom:10px;
+}
+
+.card{
+background:white;
+padding:12px;
+border-radius:10px;
+margin-bottom:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:black;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>📊 Cierres Mensuales</h2>
+
+<select id="mesSelect"></select>
+
+<div id="detalle"></div>
+
+<button onclick="volver()">Volver</button>
+
+<script>
+
+const cierres = JSON.parse(localStorage.getItem("cierres")) || [];
+
+const select=document.getElementById("mesSelect");
+const detalle=document.getElementById("detalle");
+
+cierres.forEach((c,i)=>{
+ let o=document.createElement("option");
+ o.value=i;
+ o.textContent=c.mes;
+ select.appendChild(o);
+});
+
+select.onchange=mostrar;
+
+function mostrar(){
+
+ const c=cierres[select.value];
+
+ let html=`<div class="card"><b>${c.mes}</b><br>${c.saldo}</div>`;
+
+ c.movimientos.forEach(m=>{
+  html+=`<div class="card">${m.categoria} $${m.monto}</div>`;
+ });
+
+ detalle.innerHTML=html;
+}
+
+function volver(){
+ location.href="index.html";
+}
+
+mostrar();
+
+</script>
+
+</body>
+</html>

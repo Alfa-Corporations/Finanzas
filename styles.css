@@ -1,0 +1,128 @@
+* {
+ margin: 0;
+ padding: 0;
+}
+
+h1,
+h3 {
+ margin: 0;
+}
+
+body {
+ width: 100vw;
+ height: 100vh;
+ margin: 0;
+ font-family: system-ui;
+ background: #f4f4f4;
+}
+
+header {
+ width: 100vw;
+ height: 3.5rem;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ background: #000000;
+ color: #FFFFFF;
+}
+
+header div {
+ display: flex;
+ gap: .5rem;
+ margin-right: 1rem;
+}
+
+header button {
+ font-size: 20px;
+ background: transparent;
+ border: transparent;
+}
+
+.app {
+ width: 100vw;
+ height: calc(100vh - 5rem);
+ display: flex;
+ flex-direction: column;
+ padding: 1rem 0;
+}
+
+.balance {
+ text-align: center;
+}
+
+.montos {
+ display: flex;
+ justify-content: center;
+ gap: 5rem;
+ color: gray;
+}
+
+.form {
+ width: 100%;
+ margin: 1rem auto;
+ display: flex;
+ justify-content: center;
+ flex-wrap: wrap;
+ gap: .5rem;
+}
+
+.form select,
+.form input {
+ width: 40%;
+ border-radius: .2rem;
+ padding: .2rem;
+ border: 1px solid #00000050;
+ box-shadow: 0 0 2px #00000050;
+}
+
+.form button {
+ width: 90%;
+ border: transparent;
+ padding: .5rem;
+ box-shadow: 0 0 2px #00000050;
+ margin-top: 1rem;
+ color: white;
+ background: black;
+ border-radius: .5rem;
+}
+
+ul{
+ flex:1;
+ overflow-y:auto;
+ list-style:none;
+ padding:10px;
+ margin:0;
+}
+
+li{
+ background:white;
+ padding:12px;
+ margin-bottom:8px;
+ border-radius:12px;
+ align-items: center;
+ display:flex;
+ justify-content:space-between;
+ box-shadow:0 2px 6px rgba(0,0,0,.05);
+}
+
+li button{
+ background: transparent;
+ border-radius:50%;
+ border: transparent;
+ width: 35px;
+ height: 35px;
+ padding:0;
+}
+
+footer{
+ padding:8px;
+ background:white;
+}
+
+footer button {
+  background: black;
+  color: white;
+  border: transparent;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+ }

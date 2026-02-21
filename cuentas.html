@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuentas por Pagar</title>
+  
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui;
+      background: #f4f4f4;
+      padding: 15px;
+    }
+    
+    h2 {
+      margin-bottom: 15px;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    input {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #00000030;
+    }
+    
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: black;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+      transition: all .3s ease;
+    }
+    
+    .card.paid {
+      opacity: .5;
+      text-decoration: line-through;
+    }
+    
+    .saldo {
+      font-weight: bold;
+      transition: all .4s ease;
+    }
+    
+    .historial {
+      margin-top: 10px;
+      font-size: .9rem;
+      color: gray;
+    }
+    
+    .auto {
+      margin-top: 10px;
+      background: #00000008;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    
+    .total {
+      margin: 20px 0;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <h2>🧾 Cuentas por Pagar</h2>
+  
+  <form id="formCuenta">
+    <input id="nombre" placeholder="Nombre de la cuenta">
+    <input id="monto" type="number" placeholder="Monto">
+    <input id="fecha" type="date">
+    <button type="submit">Agregar Cuenta</button>
+  </form>
+  
+  <div class="total" id="totalPendiente"></div>
+  
+  <div id="listaCuentas"></div>
+  
+  <button onclick="volver()">Volver</button>
+  
+  <script src="cuentas.js"></script>
+  
+</body>
+
+</html>
